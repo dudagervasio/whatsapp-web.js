@@ -6,6 +6,7 @@ module.exports = {
     Client: require('./src/Client'),
     
     version: require('./package.json').version,
+    dgVersion: require('./src/dgversion').dgVersion,
 
     // Structures
     Chat: require('./src/structures/Chat'),
@@ -28,5 +29,5 @@ module.exports = {
     RemoteAuth: require('./src/authStrategies/RemoteAuth'),
     LegacySessionAuth: require('./src/authStrategies/LegacySessionAuth'),
     
-    ...Constants
+    ...Constants,
 };
