@@ -1,3 +1,3 @@
-const dgVersion = '1.1.0';
+const dgVersion = '1.2.0';
 
 module.exports = { dgVersion };
