@@ -193,7 +193,7 @@ class Chat extends Base {
                 return true;
             };
 
-            const chat = window.Store.Chat.get(chatId);
+            const chat = await window.Store.Chat.get(chatId);
             let msgs = chat.msgs.getModelsArray().filter(msgFilter);
 
             if (searchOptions && searchOptions.limit > 0) {
