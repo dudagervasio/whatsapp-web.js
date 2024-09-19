@@ -91,7 +91,7 @@ class Chat extends Base {
      * @returns {Promise<Message>} Message that was just sent
      */
     async sendMessage(content, options) {
-        return this.client.sendMessage(this.id._serialized, content, options);
+        return await this.client.sendMessage(this.id._serialized, content, options);
     }
 
     /**
@@ -99,7 +99,7 @@ class Chat extends Base {
      * @returns {Promise<Boolean>} result
      */
     async sendSeen() {
-        return this.client.sendSeen(this.id._serialized);
+        return await this.client.sendSeen(this.id._serialized);
     }
 
     /**
@@ -126,14 +126,14 @@ class Chat extends Base {
      * Archives this chat
      */
     async archive() {
-        return this.client.archiveChat(this.id._serialized);
+        return await this.client.archiveChat(this.id._serialized);
     }
 
     /**
      * un-archives this chat
      */
     async unarchive() {
-        return this.client.unarchiveChat(this.id._serialized);
+        return await this.client.unarchiveChat(this.id._serialized);
     }
 
     /**
@@ -259,7 +259,7 @@ class Chat extends Base {
      * @returns {Promise<Array<Label>>}
      */
     async getLabels() {
-        return this.client.getChatLabels(this.id._serialized);
+        return await this.client.getChatLabels(this.id._serialized);
     }
 
     /**

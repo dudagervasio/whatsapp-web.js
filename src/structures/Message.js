@@ -312,7 +312,7 @@ class Message extends Base {
      */
     async reload() {
         const newData = await this.client.pupPage.evaluate(async (msgId) => {
-            const msg = window.Store.Msg.get(msgId) || (await window.Store.Msg.getMessagesById([msgId]))?.messages?.[0];
+            const msg = await window.Store.Msg.get(msgId) || (await window.Store.Msg.getMessagesById([msgId]))?.messages?.[0];
             if (!msg) return null;
             return window.WWebJS.getMessageModel(msg);
         }, this.id._serialized);
@@ -335,16 +335,16 @@ class Message extends Base {
      * Returns the Chat this message was sent in
      * @returns {Promise<Chat>}
      */
-    getChat() {
-        return this.client.getChatById(this._getChatId());
+    async getChat() {
+        return await this.client.getChatById(this._getChatId());
     }
 
     /**
      * Returns the Contact this message was sent from
      * @returns {Promise<Contact>}
      */
-    getContact() {
-        return this.client.getContactById(this.author || this.from);
+    async getContact() {
+        return await this.client.getContactById(this.author || this.from);
     }
 
     /**
@@ -371,8 +371,8 @@ class Message extends Base {
         if (!this.hasQuotedMsg) return undefined;
 
         const quotedMsg = await this.client.pupPage.evaluate(async (msgId) => {
-            const msg = window.Store.Msg.get(msgId) || (await window.Store.Msg.getMessagesById([msgId]))?.messages?.[0];
-            const quotedMsg = window.Store.QuotedMsg.getQuotedMsgObj(msg);
+            const msg = await window.Store.Msg.get(msgId) || (await window.Store.Msg.getMessagesById([msgId]))?.messages?.[0];
+            const quotedMsg = await window.Store.QuotedMsg.getQuotedMsgObj(msg);
             return window.WWebJS.getMessageModel(quotedMsg);
         }, this.id._serialized);
 
@@ -399,7 +399,7 @@ class Message extends Base {
             quotedMessageId: this.id._serialized
         };
 
-        return this.client.sendMessage(chatId, content, options);
+        return await this.client.sendMessage(chatId, content, options);
     }
 
     /**
@@ -522,7 +522,7 @@ class Message extends Base {
      */
     async star() {
         await this.client.pupPage.evaluate(async (msgId) => {
-            const msg = window.Store.Msg.get(msgId) || (await window.Store.Msg.getMessagesById([msgId]))?.messages?.[0];
+            const msg = await window.Store.Msg.get(msgId) || (await window.Store.Msg.getMessagesById([msgId]))?.messages?.[0];
             if (window.Store.MsgActionChecks.canStarMsg(msg)) {
                 let chat = await window.Store.Chat.find(msg.id.remote);
                 return window.Store.Cmd.sendStarMsgs(chat, [msg], false);
@@ -535,7 +535,7 @@ class Message extends Base {
      */
     async unstar() {
         await this.client.pupPage.evaluate(async (msgId) => {
-            const msg = window.Store.Msg.get(msgId) || (await window.Store.Msg.getMessagesById([msgId]))?.messages?.[0];
+            const msg = await window.Store.Msg.get(msgId) || (await window.Store.Msg.getMessagesById([msgId]))?.messages?.[0];
             if (window.Store.MsgActionChecks.canStarMsg(msg)) {
                 let chat = await window.Store.Chat.find(msg.id.remote);
                 return window.Store.Cmd.sendUnstarMsgs(chat, [msg], false);
@@ -582,7 +582,7 @@ class Message extends Base {
      */
     async getInfo() {
         const info = await this.client.pupPage.evaluate(async (msgId) => {
-            const msg = window.Store.Msg.get(msgId) || (await window.Store.Msg.getMessagesById([msgId]))?.messages?.[0];
+            const msg = await window.Store.Msg.get(msgId) || (await window.Store.Msg.getMessagesById([msgId]))?.messages?.[0];
             if (!msg || !msg.id.fromMe) return null;
 
             return new Promise((resolve) => {
@@ -616,7 +616,7 @@ class Message extends Base {
     async getPayment() {
         if (this.type === MessageTypes.PAYMENT) {
             const msg = await this.client.pupPage.evaluate(async (msgId) => {
-                const msg = window.Store.Msg.get(msgId) || (await window.Store.Msg.getMessagesById([msgId]))?.messages?.[0];
+                const msg = await window.Store.Msg.get(msgId) || (await window.Store.Msg.getMessagesById([msgId]))?.messages?.[0];
                 if(!msg) return null;
                 return msg.serialize();
             }, this.id._serialized);
@@ -691,10 +691,10 @@ class Message extends Base {
             return null;
         }
         const messageEdit = await this.client.pupPage.evaluate(async (msgId, message, options) => {
-            const msg = window.Store.Msg.get(msgId) || (await window.Store.Msg.getMessagesById([msgId]))?.messages?.[0];
+            const msg = await window.Store.Msg.get(msgId) || (await window.Store.Msg.getMessagesById([msgId]))?.messages?.[0];
             if (!msg) return null;
 
-            let canEdit = window.Store.MsgActionChecks.canEditText(msg) || window.Store.MsgActionChecks.canEditCaption(msg);
+            let canEdit = await window.Store.MsgActionChecks.canEditText(msg) || await window.Store.MsgActionChecks.canEditCaption(msg);
             if (canEdit) {
                 const msgEdit = await window.WWebJS.editMessage(msg, message, options);
                 return msgEdit.serialize();
