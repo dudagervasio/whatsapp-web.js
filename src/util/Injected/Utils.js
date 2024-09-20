@@ -5,7 +5,7 @@ exports.LoadUtils = () => {
 
     window.WWebJS.forwardMessage = async (chatId, msgId) => {
         const msg = await window.Store.Msg.get(msgId) || (await window.Store.Msg.getMessagesById([msgId]))?.messages?.[0];
-        let chat = window.Store.Chat.get(chatId);
+        let chat = await window.Store.Chat.get(chatId);
 
         if (window.compareWwebVersions(window.Debug.VERSION, '>', '2.3000.0')) {
             return window.Store.ForwardUtils.forwardMessagesToChats([msg], [chat], false);
@@ -15,7 +15,7 @@ exports.LoadUtils = () => {
     };
 
     window.WWebJS.sendSeen = async (chatId) => {
-        let chat = window.Store.Chat.get(chatId);
+        let chat = await window.Store.Chat.get(chatId);
         if (chat !== undefined) {
             await window.Store.SendSeen.sendSeen(chat, false);
             return true;
@@ -653,7 +653,7 @@ exports.LoadUtils = () => {
     };
 
     window.WWebJS.sendClearChat = async (chatId) => {
-        let chat = window.Store.Chat.get(chatId);
+        let chat = await window.Store.Chat.get(chatId);
         if (chat !== undefined) {
             await window.Store.SendClear.sendClear(chat, false);
             return true;
@@ -662,7 +662,7 @@ exports.LoadUtils = () => {
     };
 
     window.WWebJS.sendDeleteChat = async (chatId) => {
-        let chat = window.Store.Chat.get(chatId);
+        let chat = await window.Store.Chat.get(chatId);
         if (chat !== undefined) {
             await window.Store.SendDelete.sendDelete(chat);
             return true;

@@ -948,14 +948,11 @@ class Client extends EventEmitter {
         }
 
         const newMessage = await this.pupPage.evaluate(async (chatId, message, options, sendSeen) => {
-            const chatWid = window.Store.WidFactory.createWid(chatId);
+            const chatWid = await window.Store.WidFactory.createWid(chatId);
             const chat = await window.Store.Chat.find(chatWid);
-
-
             if (sendSeen) {
                 await window.WWebJS.sendSeen(chatId);
             }
-
             const msg = await window.WWebJS.sendMessage(chat, message, options, sendSeen);
             return window.WWebJS.getMessageModel(msg);
         }, chatId, content, internalOptions, sendSeen);
@@ -1173,7 +1170,7 @@ class Client extends EventEmitter {
      */
     async pinChat(chatId) {
         return this.pupPage.evaluate(async chatId => {
-            let chat = window.Store.Chat.get(chatId);
+            let chat = await window.Store.Chat.get(chatId);
             if (chat.pin) {
                 return true;
             }
@@ -1196,7 +1193,7 @@ class Client extends EventEmitter {
      */
     async unpinChat(chatId) {
         return this.pupPage.evaluate(async chatId => {
-            let chat = window.Store.Chat.get(chatId);
+            let chat = await window.Store.Chat.get(chatId);
             if (!chat.pin) {
                 return false;
             }
